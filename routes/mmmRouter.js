@@ -6,7 +6,9 @@ router.post('/', async (req, res) => {
     return res.status(200).json({ message: `homeMMM` })
 })
 router.post('/mean', async (req, res) => {
-    return res.status(200).json({ message: `mean` })
+    const {principalValues} = req.body;
+    
+    return res.status(200).json({ message: principalValues })
 })
 router.post('/median', (req, res) => {
     return res.status(200).json({ message: `median` })
