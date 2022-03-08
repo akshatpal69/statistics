@@ -8,11 +8,12 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     return res.status(200).json({ message: `routes listed here` })
 })
+
 router.post('/mean', async (req, res) => {
     //get array from http request body
     const { terms } = req.body
     //check if array size is greater than 1
-    if (terms.length > 1) {
+    if (undefined !== terms && terms.length > 1) {
         let sum = 0
         //add the array values and store them in a variable
         for (i = 0; i < terms.length; i++) {
@@ -32,7 +33,19 @@ router.post('/mean', async (req, res) => {
 })
 
 router.post('/median', (req, res) => {
-    return res.status(200).json({ message: `median` })
+    const { terms } = req.body
+    if (undefined !== terms && terms.length > 1) {
+        let sum = 0
+        //check if terms are numbers
+        for (i = 0; i < terms.length; i++) {
+            if (typeof terms[i] == 'number') {
+                
+            } else {
+                return res.status(400).json({ message: `${terms[i]} on index ${i} is not a number` })
+            }
+        }
+    }
+    return res.status(200).json({ median: 'calculatedMedian', message: `ok` })
 })
 router.post('/mode', (req, res) => {
     return res.status(200).json({ message: `mode` })
