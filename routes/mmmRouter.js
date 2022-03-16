@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
 
 router.post('/mean', async (req, res) => {
     //get array from http request body
-    const { terms } = req.body
+    let { terms } = req.body
     //check if array size is greater than 1
     if (undefined !== terms && terms.length > 1) {
         let sum = 0
@@ -33,17 +33,37 @@ router.post('/mean', async (req, res) => {
 })
 
 router.post('/median', (req, res) => {
-    const { terms } = req.body
+    //copy the array sent to a variable
+    let { terms } = req.body
+    //check if there are valid values in array
     if (undefined !== terms && terms.length > 1) {
+        console.log(`data received is: ${terms}`)
+        //sort the array
+        terms.sort(function(a, b){return a - b});
+        console.log(`sorted data is: ${terms}`)
+        //divide the array in two parts
         let sum = 0
-        //check if terms are numbers
-        for (i = 0; i < terms.length; i++) {
-            if (typeof terms[i] == 'number') {
-                
-            } else {
+        sum = terms.length%2
+        console.log(`value of sum is: ${sum}`)
+        //for (i = 0; i < terms.length; i++) {
+            //if (typeof terms[i] == 'number') {
+                if(sum%2==0){
+                    calculatedMedian = ( (terms[(terms.length/2)-1] ) + ( terms[(terms.length/2)] )) / 2
+                    console.log(`number of terms are: ${terms.length}`)
+                    console.log(`termsLength/2-1: `+terms[(terms.length/2)-1])
+                    console.log(`termsLength/2: `+terms[(terms.length/2)])
+                    return res.status(200).json({ median: calculatedMedian, message: "okeven" })
+                }
+                else{
+                    console.log(`number of terms are: ${terms.length}`)
+                    console.log(`termsLength/2-1: `+terms[Math.ceil(terms.length/2)-1])
+                    calculatedMedian = terms[Math.ceil(terms.length/2)-1]
+                    return res.status(200).json({ median: calculatedMedian, message: "okodd" })
+                }
+           // } else {
                 return res.status(400).json({ message: `${terms[i]} on index ${i} is not a number` })
-            }
-        }
+           // }
+        //}
     }
     return res.status(200).json({ median: 'calculatedMedian', message: `ok` })
 })
